@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
 
 android {
     compileSdkVersion 21
@@ -14,5 +15,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+    }
+}
+
+group = 'net.majorkernelpanic.streaming'
+version = '1.0'
+
+uploadArchives {
+    repositories {
+        mavenLocal()
     }
 }
