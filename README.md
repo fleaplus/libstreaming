@@ -1,5 +1,11 @@
 # Introduction
 
+## How to build the library
+- Open in Android Studio
+- Build the project
+- Run the "uploadArchives" gradle task to publish the built library to your local maven cache
+- Any projects depending on the library should have the clean task run so they use the updated version of the library
+
 ## What it does
 
 **libstreaming** is an API that allows you, with only a few lines of code, to stream the camera and/or microphone of an android powered device using RTP over UDP. 
