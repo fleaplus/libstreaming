@@ -60,10 +60,10 @@ public class EncoderDebugger {
 	 * If this is set to false the test will be run only once and the result 
 	 * will be saved in the shared preferences. 
 	 */
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	
 	/** Set this to true to see more logs. */
-	private static final boolean VERBOSE = false;
+	private static final boolean VERBOSE = true;
 
 	/** Will be incremented every time this test is modified. */
 	private static final int VERSION = 3;
@@ -243,7 +243,7 @@ public class EncoderDebugger {
 							try {
 								decode(true);
 								if (VERBOSE) Log.d(TAG, mDecoderName+" successfully decoded the NALs (color format "+mDecoderColorFormat+")");
-								decoded = true;
+//								decoded = true;
 							} catch (Exception e) {
 								if (VERBOSE) Log.e(TAG, mDecoderName+" failed to decode the NALs");
 								e.printStackTrace();
@@ -524,6 +524,8 @@ public class EncoderDebugger {
 	private void configureEncoder() throws IOException  {
 		mEncoder = MediaCodec.createByCodecName(mEncoderName);
 		MediaFormat mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, mWidth, mHeight);
+//		mediaFormat.setInteger("profile", 1); // baseline
+//		mediaFormat.setInteger("level", 0x1000); // 4.1
 		mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, BITRATE);
 		mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, FRAMERATE);	
 		mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, mEncoderColorFormat);
@@ -736,7 +738,7 @@ public class EncoderDebugger {
 		ByteBuffer[] decOutputBuffers = mDecoder.getOutputBuffers();
 		BufferInfo info = new BufferInfo();
 
-		while (elapsed<3000000) {
+		while (elapsed<30000000) {
 
 			// Feeds the decoder with a NAL unit
 			if (i<NB_ENCODED) {
@@ -792,6 +794,7 @@ public class EncoderDebugger {
 			}	
 			elapsed = timestamp() - now;
 		}
+        if (VERBOSE) Log.v(TAG, "Only decoded "+j+" out of "+(NB_DECODED-1)+" frames.");
 
 		throw new RuntimeException("The decoder did not decode anything.");
 
