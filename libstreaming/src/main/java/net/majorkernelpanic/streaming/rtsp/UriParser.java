@@ -61,7 +61,7 @@ public class UriParser {
 	 */
 	public static Session parse(String uri) throws IllegalStateException, IOException {
 		SessionBuilder builder = SessionBuilder.getInstance().clone();
-		byte audioApi = 0, videoApi = 0;
+		byte audioApi = 0, videoApi = MediaStream.MODE_MEDIACODEC_API_2;
 
         String query = URI.create(uri).getQuery();
         String[] queryParams = query == null ? new String[0] : query.split("&");

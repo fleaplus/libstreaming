@@ -60,7 +60,7 @@ public class EncoderDebugger {
 	 * If this is set to false the test will be run only once and the result 
 	 * will be saved in the shared preferences. 
 	 */
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	
 	/** Set this to true to see more logs. */
 	private static final boolean VERBOSE = true;
@@ -243,7 +243,7 @@ public class EncoderDebugger {
 							try {
 								decode(true);
 								if (VERBOSE) Log.d(TAG, mDecoderName+" successfully decoded the NALs (color format "+mDecoderColorFormat+")");
-//								decoded = true;
+								decoded = true;
 							} catch (Exception e) {
 								if (VERBOSE) Log.e(TAG, mDecoderName+" failed to decode the NALs");
 								e.printStackTrace();
@@ -738,7 +738,7 @@ public class EncoderDebugger {
 		ByteBuffer[] decOutputBuffers = mDecoder.getOutputBuffers();
 		BufferInfo info = new BufferInfo();
 
-		while (elapsed<30000000) {
+		while (elapsed<60000000) {
 
 			// Feeds the decoder with a NAL unit
 			if (i<NB_ENCODED) {
