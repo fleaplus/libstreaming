@@ -652,7 +652,7 @@ public abstract class VideoStream extends MediaStream {
 		int[] max = VideoQuality.determineMaximumSupportedFramerate(parameters);
 		
 		double ratio = (double)mQuality.resX/(double)mQuality.resY;
-		mSurfaceView.requestAspectRatio(ratio);
+//		mSurfaceView.requestAspectRatio(ratio); // TODO: this causes the view to be resized
 		
 		parameters.setPreviewFormat(mCameraImageFormat);
 		parameters.setPreviewSize(mQuality.resX, mQuality.resY);
