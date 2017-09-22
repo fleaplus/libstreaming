@@ -125,6 +125,14 @@ public class SurfaceView extends android.view.SurfaceView implements Runnable, O
 		}
 	}
 
+	public void stopGLThread() {
+        Log.d(TAG,"Thread stopped.");
+        if (mThread != null) {
+            mThread.interrupt();
+        }
+        mRunning = false;
+    }
+
 	@Override
 	public void run() {
 
@@ -164,7 +172,7 @@ public class SurfaceView extends android.view.SurfaceView implements Runnable, O
 			}
 		} catch (InterruptedException ignore) {
 		} finally {
-			mViewSurfaceManager.release();
+			mViewSurfaceManager.releaseMaster();
 			mTextureManager.release();
 		}
 	}

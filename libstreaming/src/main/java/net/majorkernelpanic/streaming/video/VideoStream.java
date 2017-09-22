@@ -278,26 +278,44 @@ public abstract class VideoStream extends MediaStream {
 		Log.d(TAG,"Stream configuration: FPS: "+mQuality.framerate+" Width: "+mQuality.resX+" Height: "+mQuality.resY);
 	}
 
-	/** Stops the stream. */
+	/**
+     * Stops the stream.
+     * For MediaCodec with a Surface, Resources must be released in the following order:
+     * 1. Stop the Packetizer
+     * 2. Signal the encoder that input is finished and then flush it
+     * 3. Stop the camera
+     * 4. Remove the mediacodec surface from the surfaceview, releasing its surface
+     * 5. Stop the surfaceview thread (but do not release the main surface!)
+     * 6. Stop the encoder, and free its resources
+     * */
 	public synchronized void stop() {
 		if (mCamera != null) {
 			if (mMode == MODE_MEDIACODEC_API) {
 				mCamera.setPreviewCallbackWithBuffer(null);
 			}
 			if (mMode == MODE_MEDIACODEC_API_2) {
+                if (mPacketizer != null) {
+                    mPacketizer.stop();
+                    if (mMediaCodec != null) {
+                        mMediaCodec.signalEndOfInputStream();
+                        mMediaCodec.flush();
+                        destroyCamera();
+                    }
+                }
 				((SurfaceView)mSurfaceView).removeMediaCodecSurface();
+                mSurfaceView.stopGLThread();
 			}
 			super.stop();
 			// We need to restart the preview
-			if (!mCameraOpenedManually) {
-				destroyCamera();
-			} else {
-				try {
-					startPreview();
-				} catch (RuntimeException e) {
-					e.printStackTrace();
-				}
-			}
+//			if (!mCameraOpenedManually) {
+//				destroyCamera();
+//			} else {
+//				try {
+//					startPreview();
+//				} catch (RuntimeException e) {
+//					e.printStackTrace();
+//				}
+//			}
 		}
 	}
 
@@ -622,7 +640,7 @@ public abstract class VideoStream extends MediaStream {
 
 	protected synchronized void destroyCamera() {
 		if (mCamera != null) {
-			if (mStreaming) super.stop();
+//			if (mStreaming) super.stop();
 			lockCamera();
 			mCamera.stopPreview();
 			try {

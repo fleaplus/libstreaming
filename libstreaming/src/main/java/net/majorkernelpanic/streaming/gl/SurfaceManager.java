@@ -163,6 +163,20 @@ public class SurfaceManager {
 		mSurface.release();
 	}
 
+	public void releaseMaster() {
+		if (mEGLDisplay != EGL14.EGL_NO_DISPLAY) {
+			EGL14.eglMakeCurrent(mEGLDisplay, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_SURFACE,
+					EGL14.EGL_NO_CONTEXT);
+			EGL14.eglDestroySurface(mEGLDisplay, mEGLSurface);
+			EGL14.eglDestroyContext(mEGLDisplay, mEGLContext);
+			EGL14.eglReleaseThread();
+			EGL14.eglTerminate(mEGLDisplay);
+		}
+		mEGLDisplay = EGL14.EGL_NO_DISPLAY;
+		mEGLContext = EGL14.EGL_NO_CONTEXT;
+		mEGLSurface = EGL14.EGL_NO_SURFACE;
+	}
+
 	/**
 	 * Checks for EGL errors. Throws an exception if one is found.
 	 */
